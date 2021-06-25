@@ -18,7 +18,7 @@ public class FileServiceTests {
     void testCreateDatabase() {
         String databaseName = "";
         String databasePath = "/Users/chen/Desktop/Newcastle/Dissertation/" +
-                "code/FamilyFacts/Middleware/src/main/resources/sqlite/test.db";
+                "code/FamilyFacts/Middleware/src/main/resources/sqlite/ged.db";
         fileService.createDatabase(databaseName, databasePath);
     }
 

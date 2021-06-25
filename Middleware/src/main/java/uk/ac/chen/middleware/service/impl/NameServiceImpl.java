@@ -21,7 +21,17 @@ public class NameServiceImpl implements NameService {
     @Override
     public List<NameEntity> getNameListByFullName(String firstName, String lastName) {
         QueryWrapper<NameEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("Surname", lastName).eq("Given", firstName);
+        boolean firstNameNotNull = firstName != null && !"".equals(firstName);
+        boolean lastNameNotNull = lastName != null && !"".equals(lastName);
+        if (firstNameNotNull && lastNameNotNull) {
+            queryWrapper.eq("Surname", lastName).eq("Given", firstName);
+        } else if (!firstNameNotNull && !lastNameNotNull) {
+            return nameMapper.selectList(null);
+        } else if (lastNameNotNull){
+            queryWrapper.eq("Surname", lastName);
+        } else {
+            queryWrapper.eq("Given", firstName);
+        }
         return nameMapper.selectList(queryWrapper);
     }
 

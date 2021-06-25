@@ -54,6 +54,13 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.gedcom4j/gedcom4j -->
+        <dependency>
+            <groupId>org.gedcom4j</groupId>
+            <artifactId>gedcom4j</artifactId>
+            <version>4.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -45,8 +45,10 @@ public class PersonServiceImpl implements PersonService {
                          Integer birthYear, Integer deathYear, String address) {
 
         AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setName(address);
-        addressMapper.insert(addressEntity);
+        if (address != null && !"".equals(address)) {
+            addressEntity.setName(address);
+            addressMapper.insert(addressEntity);
+        }
 
         PersonEntity personEntity = new PersonEntity();
         personEntity.setSex(sex);

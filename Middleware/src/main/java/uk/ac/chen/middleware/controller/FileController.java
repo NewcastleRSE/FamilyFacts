@@ -8,6 +8,7 @@ import uk.ac.chen.middleware.entity.results.JsonResult;
 import uk.ac.chen.middleware.entity.results.Result;
 import uk.ac.chen.middleware.entity.results.ResultCode;
 import uk.ac.chen.middleware.service.FileService;
+import uk.ac.chen.middleware.service.GedcomService;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,9 @@ public class FileController {
 
     @Resource
     private FileService fileService;
+
+    @Resource
+    private GedcomService gedcomService;
 
     @PostMapping("database/create")
     public JsonResult createDatabase(@RequestParam("database_path") String databasePath) {
@@ -47,4 +51,11 @@ public class FileController {
         return fileService.renameDatabase(oldName, newName, databasePath) ?
                 Result.success() : Result.fail();
     }
+
+    @PostMapping("gedcom/import")
+    public JsonResult importGedcomFile(@RequestParam("gedcom_path") String gedcomFilePath) {
+        gedcomService.loadGedcomFile(gedcomFilePath);
+        return Result.success();
+    }
+
 }
