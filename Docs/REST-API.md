@@ -148,20 +148,26 @@ http://3.9.172.108:8090/api/file/database/rename?old_name=test&new_name=demo&dat
 ```
 
 ### Import GEDCOM file
-Import a GEDCOM file and parse it into a new database file.
+Import a GEDCOM file and parse it into this database file.
 #### URL
 POST /file/gedcom/import
 #### Parameters
 |  Name   | Type |  In  | Required | Description |
 |  ----   | ---- | ---- |   ----   |    ----     |
-| file_name | String | query |required| The name of the gedcom file |
 | file_path | String | query|required|The path of the gedcom file|
-* Success Response
-  - **Code:** 200
-  - **Content:**
-* Error Response
 * Example Request
+```shell
+http://localhost:8090/api/file/gedcom/import?gedcom_path=%2Fhome%2Fec2-user%2FFamilyFacts%2Fsqlite%2Fsample.ged
+```
 * Example Response
+```json
+{
+  "success": true,
+  "code": 200,
+  "msg": "Success",
+  "data": null
+}
+```
 
 ## Family
 ### Family Tree
@@ -508,8 +514,8 @@ GET /api/person/search
 #### Parameters
 |  Name   | Type |  In  | Required | Description |
 |  ----   | ---- | ---- |   ----   |    ----     |
-| first_name | String |query |required| The first name of the person |
-| last_name | String |query|required|The last name of the person|
+| first_name | String |query |optional| The first name of the person |
+| last_name | String |query|optional|The last name of the person|
 * Example Request
 ```shell
 http://3.9.172.108:8090/api/person/search?first_name=Wilhelm%20Friederich&last_name=Henning
