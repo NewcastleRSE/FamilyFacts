@@ -26,7 +26,7 @@ public class PersonServiceTests {
     @Test
     void testAddPerson() {
         String firstName = "test";
-        String lastName = "person";
+        String lastName = "sister1";
         Integer sex = 0;
         Integer birthYear = 1920;
         Integer deathYear = 2010;
@@ -44,7 +44,7 @@ public class PersonServiceTests {
 
     @Test
     void testUpdateFather() {
-        Integer personId = 135;
+        Integer personId = 140;
         Integer fatherId = 137;
         int id = personService.updateFatherOfPerson(personId, fatherId);
         Assertions.assertTrue(id >= 0);
@@ -52,7 +52,7 @@ public class PersonServiceTests {
 
     @Test
     void testUpdateMother() {
-        Integer personId = 135;
+        Integer personId = 140;
         Integer motherId = 138;
         int id = personService.updateMotherOfPerson(personId, motherId);
         Assertions.assertTrue(id >= 0);

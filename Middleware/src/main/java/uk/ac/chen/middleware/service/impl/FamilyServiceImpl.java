@@ -3,13 +3,17 @@ package uk.ac.chen.middleware.service.impl;
 import org.springframework.stereotype.Service;
 import uk.ac.chen.middleware.entity.FamilyEntity;
 import uk.ac.chen.middleware.entity.PersonEntity;
+import uk.ac.chen.middleware.entity.vo.FamilyDto;
 import uk.ac.chen.middleware.entity.vo.FamilyVO;
 import uk.ac.chen.middleware.entity.vo.PersonVO;
 import uk.ac.chen.middleware.mapper.FamilyMapper;
+import uk.ac.chen.middleware.mapper.PersonMapper;
 import uk.ac.chen.middleware.service.FamilyService;
 import uk.ac.chen.middleware.service.PersonService;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: Qiuyu
@@ -22,6 +26,9 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Resource
     private FamilyMapper familyMapper;
+
+    @Resource
+    private PersonMapper personMapper;
 
     @Override
     public FamilyVO getFamilyTreeByPersonId(Integer personId) {
@@ -67,5 +74,79 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FamilyEntity getFamilyByFamilyId(Integer familyId) {
         return familyMapper.selectById(familyId);
+    }
+
+    @Override
+    public FamilyDto getWholeFamilyByPersonId(Integer personId) {
+        FamilyDto familyDto = new FamilyDto();
+        PersonEntity personEntity = personService.getPersonById(personId);
+        if (personEntity == null || personEntity.getPersonId() == null) {
+            return null;
+        }
+
+        PersonVO person = personService.getPersonVOById(personId);
+        familyDto.setPerson(person);
+        FamilyEntity familyEntity;
+        if (personEntity.getParentId() != null) {
+            Integer fatherId = null;
+            Integer motherId = null;
+            // parents
+            familyEntity = getFamilyByFamilyId(personEntity.getParentId());
+            if (familyEntity != null && familyEntity.getFatherId() != null) {
+                fatherId = familyEntity.getFatherId();
+                FamilyVO father = getFamilyTreeByPersonId(fatherId);
+                familyDto.setFather(father);
+            }
+            if (familyEntity != null && familyEntity.getMotherId() != null) {
+                motherId = familyEntity.getMotherId();
+                FamilyVO mother = getFamilyTreeByPersonId(motherId);
+                familyDto.setMother(mother);
+            }
+
+            // no parents, no bothers and sisters
+            if (motherId == null && fatherId == null) {
+                return familyDto;
+            }
+
+            // bothers and sisters
+            List<PersonEntity> persons = personService.listPersons();
+            if (persons != null && persons.size() > 0) {
+                List<PersonVO> children = new ArrayList<>();
+                for (PersonEntity p : persons) {
+                    if (p.getPersonId() == null || p.getParentId() == null) {
+                        continue;
+                    }
+                    FamilyEntity f = getFamilyByFamilyId(p.getParentId());
+                    if (f == null || f.getFamilyId() == null) {
+                        continue;
+                    }
+                    boolean motherIdEqNull = f.getMotherId() == null && motherId == null;
+                    boolean fatherIdEqNull = f.getFatherId() == null && fatherId == null;
+                    boolean motherIdEq = f.getMotherId().equals(motherId);
+                    boolean fatherIdEq = f.getFatherId().equals(fatherId);
+                    if ((motherIdEqNull && fatherIdEq) || (fatherIdEqNull && motherIdEq)
+                            || (motherIdEq && fatherIdEq)) {
+                        PersonVO personVO = personService.getPersonVOById(p.getPersonId());
+                        children.add(personVO);
+                    }
+                }
+                familyDto.setChildren(children);
+            }
+            /**
+             *
+            QueryWrapper<PersonEntity> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("ParentID", personEntity.getParentId());
+            List<PersonEntity> brothersAndSisters = personMapper.selectList(queryWrapper);
+            if (brothersAndSisters != null && brothersAndSisters.size() > 0) {
+                for (PersonEntity p : brothersAndSisters) {
+                    if (p.getPersonId() != null) {
+                        PersonVO personVO = personService.getPersonVOById(p.getPersonId());
+                        children.add(personVO);
+                    }
+                }
+            }
+            */
+        }
+        return familyDto;
     }
 }

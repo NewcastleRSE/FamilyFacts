@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.ac.chen.middleware.entity.results.JsonResult;
 import uk.ac.chen.middleware.entity.results.Result;
 import uk.ac.chen.middleware.entity.results.ResultCode;
+import uk.ac.chen.middleware.entity.vo.FamilyDto;
 import uk.ac.chen.middleware.entity.vo.FamilyVO;
 import uk.ac.chen.middleware.service.FamilyService;
 
@@ -31,6 +32,19 @@ public class FamilyController {
             return Result.fail(ResultCode.PERSON_NOT_FOUND);
         } else {
             return Result.success(familyTree);
+        }
+    }
+
+    @GetMapping("/{person_id}")
+    public JsonResult<FamilyDto> getWholeFamilyByPersonId(@PathVariable("person_id") Integer personId) {
+        if (personId == null) {
+            return Result.fail(ResultCode.PARAM_NOT_VALID);
+        }
+        FamilyDto family = familyService.getWholeFamilyByPersonId(personId);
+        if (family == null || family.getPerson() == null || family.getPerson().getPersonId() == null) {
+            return Result.fail(ResultCode.PERSON_NOT_FOUND);
+        } else {
+            return Result.success(family);
         }
     }
 }
