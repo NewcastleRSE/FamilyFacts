@@ -28,7 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import af.swing.AfPanel;
 import af.swing.layout.AfColumnLayout;
-
+//File-Open ：Need to be modified
 public class FileOpen extends JDialog{
 	
 	JTextField textField = new JTextField(20);

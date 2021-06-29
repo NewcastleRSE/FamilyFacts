@@ -8,25 +8,27 @@ import java.net.URL;
 
 import af.common.json.AfJSON;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
-public class TestCallHttpList {
+public class TestCallHttpPersonSearch {
 
-	public JSONArray httpURLGETCase(String apiUrl) {
-		String methodUrl = apiUrl;
+	public JSONObject httpURLGETCase(String filter) {
+		// TODO Auto-generated method stub
+		// String methodUrl = "http://3.9.172.108:8090/api/person/search/{person_id}";
+		String methodUrl = "http://3.9.172.108:8090/api/person/search/" + filter;
 		HttpURLConnection connection = null;
 		BufferedReader reader = null;
 		String line = null;
-		JSONArray array = null;
+		JSONObject a = null;
 		try {
 			URL url = new URL(methodUrl);
-			connection = (HttpURLConnection) url.openConnection();// 根据URL生成HttpURLConnection
-			connection.setRequestMethod("GET");// 默认GET请求
-			connection.connect();// 建立TCP连接
-			// 根据code==200显示查询成功结果
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));// 发送http请求
+				reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 				StringBuilder result = new StringBuilder();
-				// 循环读取流
+
 				while ((line = reader.readLine()) != null) {
 					result.append(line).append(System.getProperty("line.separator"));// "\n"
 				}
@@ -42,11 +44,13 @@ public class TestCallHttpList {
 				int i4 = s.indexOf(':', i3 + 1);
 				String ss = s.substring(i4 + 1, s.length() - 2);
 				if (ss.length() != 0) {
-					AfJSON afJson = new AfJSON();
-					array = afJson.jsonToArray(ss);
+
+					a = JSONObject.fromObject(ss);
+					System.out.println("----------------");
+
 				}
 			}
-			return array;
+			return a;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
