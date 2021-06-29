@@ -6,6 +6,7 @@ import uk.ac.chen.middleware.entity.results.JsonResult;
 import uk.ac.chen.middleware.entity.results.Result;
 import uk.ac.chen.middleware.entity.results.ResultCode;
 import uk.ac.chen.middleware.entity.vo.PersonVO;
+import uk.ac.chen.middleware.entity.vo.RelationshipVO;
 import uk.ac.chen.middleware.service.PersonService;
 
 import javax.annotation.Resource;
@@ -144,6 +145,20 @@ public class PersonController {
             return Result.success();
         } else {
             return Result.fail();
+        }
+    }
+
+    @GetMapping("relationship/{person_id}")
+    public JsonResult<RelationshipVO> getAllRelatedPersons(@PathVariable("person_id") Integer personId) {
+        if (personId == null) {
+            return Result.fail(ResultCode.PARAM_NOT_VALID);
+        }
+        RelationshipVO relationship = personService.getAllRelatedPersons(personId);
+        if (relationship == null || relationship.getPerson() == null
+                || relationship.getPerson().getPersonId() == null) {
+            return Result.fail(ResultCode.PERSON_NOT_FOUND);
+        } else {
+            return Result.success(relationship);
         }
     }
 }

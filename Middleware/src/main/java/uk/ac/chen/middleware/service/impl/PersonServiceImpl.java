@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 import uk.ac.chen.middleware.entity.*;
 import uk.ac.chen.middleware.entity.vo.PersonVO;
+import uk.ac.chen.middleware.entity.vo.RelationshipVO;
 import uk.ac.chen.middleware.mapper.*;
 import uk.ac.chen.middleware.service.FamilyService;
 import uk.ac.chen.middleware.service.NameService;
@@ -296,5 +297,61 @@ public class PersonServiceImpl implements PersonService {
         spouseEntity.setSpouseId(personId);
         personMapper.updateById(spouseEntity);
         return spouseId;
+    }
+
+    @Override
+    public RelationshipVO getAllRelatedPersons(Integer personId) {
+        RelationshipVO relationship = new RelationshipVO();
+        PersonEntity personEntity = getPersonById(personId);
+        if (personEntity == null || personEntity.getPersonId() == null) {
+            return null;
+        }
+        //himself/herself
+        PersonVO person = getPersonVOById(personId);
+        relationship.setPerson(person);
+
+        //get parent
+        if (personEntity.getParentId() != null) {
+            FamilyEntity familyEntity = familyService.getFamilyByFamilyId(personEntity.getParentId());
+            if (familyEntity != null) {
+                if (familyEntity.getFatherId() != null) {
+                    PersonVO father = getPersonVOById(familyEntity.getFatherId());
+                    relationship.setFather(father);
+                }
+                if (familyEntity.getMotherId() != null) {
+                    PersonVO mother = getPersonVOById(familyEntity.getMotherId());
+                    relationship.setMother(mother);
+                }
+            }
+        }
+
+        //get spouse
+        if (personEntity.getSpouseId() != null) {
+            PersonVO spouse = getPersonVOById(personEntity.getSpouseId());
+            relationship.setSpouse(spouse);
+        }
+
+        // get brothers and sisters
+        List<PersonVO> broAndSis = familyService.getBrothersAndSisters(personId);
+        relationship.setBrothersAndSisters(broAndSis);
+
+        // get children
+        List<PersonVO> children = new ArrayList<>();
+        List<PersonEntity> personEntities = personMapper.selectList(null);
+        for (PersonEntity p : personEntities) {
+            if (p.getParentId() == null) {
+                continue;
+            }
+            FamilyEntity f = familyService.getFamilyByFamilyId(p.getParentId());
+            if (f == null) {
+                continue;
+            }
+            if ((f.getFatherId() != null && f.getFatherId().equals(personId)) ||
+                    (f.getMotherId() != null && f.getMotherId().equals(personId))) {
+                children.add(getPersonVOById(p.getPersonId()));
+            }
+        }
+        relationship.setChildren(children);
+        return relationship;
     }
 }

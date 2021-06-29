@@ -2,6 +2,7 @@ package uk.ac.chen.middleware.service;
 
 import uk.ac.chen.middleware.entity.PersonEntity;
 import uk.ac.chen.middleware.entity.vo.PersonVO;
+import uk.ac.chen.middleware.entity.vo.RelationshipVO;
 
 import java.util.List;
 
@@ -130,4 +131,12 @@ public interface PersonService {
      * @return spouse id
      */
     int updateSpouseOfPerson(Integer personId, Integer spouseId);
+
+    /**
+     * Get everyone connected to this person
+     * brother, sister, parent, spouse, children
+     * @param personId
+     * @return
+     */
+    RelationshipVO getAllRelatedPersons(Integer personId);
 }

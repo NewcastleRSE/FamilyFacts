@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.ac.chen.middleware.entity.PersonEntity;
 import uk.ac.chen.middleware.entity.vo.PersonVO;
+import uk.ac.chen.middleware.entity.vo.RelationshipVO;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -139,6 +140,13 @@ public class PersonServiceTests {
         personService.deletePersonById(136);
         personService.deletePersonById(135);
         logger.info("delete person : {}", res);
+    }
+
+    @Test
+    void testGetRelationship() {
+        Integer personId = 137;
+        RelationshipVO relationship = personService.getAllRelatedPersons(personId);
+        logger.info("RelationshipVo: {}", relationship);
     }
 
 }

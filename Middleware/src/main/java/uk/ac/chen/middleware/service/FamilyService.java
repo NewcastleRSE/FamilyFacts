@@ -3,6 +3,9 @@ package uk.ac.chen.middleware.service;
 import uk.ac.chen.middleware.entity.FamilyEntity;
 import uk.ac.chen.middleware.entity.vo.FamilyDto;
 import uk.ac.chen.middleware.entity.vo.FamilyVO;
+import uk.ac.chen.middleware.entity.vo.PersonVO;
+
+import java.util.List;
 
 /**
  * @author: Qiuyu
@@ -28,4 +31,11 @@ public interface FamilyService {
      * @return
      */
     FamilyDto getWholeFamilyByPersonId(Integer personId);
+
+    /**
+     * Get Brothers And Sisters
+     * @param personId
+     * @return
+     */
+    List<PersonVO> getBrothersAndSisters(Integer personId);
 }

@@ -109,44 +109,47 @@ public class FamilyServiceImpl implements FamilyService {
             }
 
             // bothers and sisters
-            List<PersonEntity> persons = personService.listPersons();
-            if (persons != null && persons.size() > 0) {
-                List<PersonVO> children = new ArrayList<>();
-                for (PersonEntity p : persons) {
-                    if (p.getPersonId() == null || p.getParentId() == null) {
-                        continue;
-                    }
-                    FamilyEntity f = getFamilyByFamilyId(p.getParentId());
-                    if (f == null || f.getFamilyId() == null) {
-                        continue;
-                    }
-                    boolean motherIdEqNull = f.getMotherId() == null && motherId == null;
-                    boolean fatherIdEqNull = f.getFatherId() == null && fatherId == null;
-                    boolean motherIdEq = f.getMotherId().equals(motherId);
-                    boolean fatherIdEq = f.getFatherId().equals(fatherId);
-                    if ((motherIdEqNull && fatherIdEq) || (fatherIdEqNull && motherIdEq)
-                            || (motherIdEq && fatherIdEq)) {
-                        PersonVO personVO = personService.getPersonVOById(p.getPersonId());
-                        children.add(personVO);
-                    }
-                }
-                familyDto.setChildren(children);
-            }
-            /**
-             *
-            QueryWrapper<PersonEntity> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("ParentID", personEntity.getParentId());
-            List<PersonEntity> brothersAndSisters = personMapper.selectList(queryWrapper);
-            if (brothersAndSisters != null && brothersAndSisters.size() > 0) {
-                for (PersonEntity p : brothersAndSisters) {
-                    if (p.getPersonId() != null) {
-                        PersonVO personVO = personService.getPersonVOById(p.getPersonId());
-                        children.add(personVO);
-                    }
-                }
-            }
-            */
+            List<PersonVO> children = getBrothersAndSisters(personId);
+            familyDto.setChildren(children);
         }
         return familyDto;
+    }
+
+    @Override
+    public List<PersonVO> getBrothersAndSisters(Integer personId) {
+        PersonEntity personEntity = personService.getPersonById(personId);
+        if (personEntity == null || personEntity.getPersonId() == null
+                || personEntity.getParentId() == null) {
+            return null;
+        }
+        FamilyEntity familyEntity = getFamilyByFamilyId(personEntity.getParentId());
+        Integer fatherId = familyEntity.getFatherId();
+        Integer motherId = familyEntity.getMotherId();
+        if (motherId == null && fatherId == null) {
+            return null;
+        }
+        List<PersonVO> children = new ArrayList<>();
+        List<PersonEntity> persons = personService.listPersons();
+        if (persons != null && persons.size() > 0) {
+            for (PersonEntity p : persons) {
+                if (p.getPersonId() == null || p.getParentId() == null) {
+                    continue;
+                }
+                FamilyEntity f = getFamilyByFamilyId(p.getParentId());
+                if (f == null || f.getFamilyId() == null) {
+                    continue;
+                }
+                boolean motherIdEqNull = f.getMotherId() == null && motherId == null;
+                boolean fatherIdEqNull = f.getFatherId() == null && fatherId == null;
+                boolean motherIdEq = f.getMotherId().equals(motherId);
+                boolean fatherIdEq = f.getFatherId().equals(fatherId);
+                if ((motherIdEqNull && fatherIdEq) || (fatherIdEqNull && motherIdEq)
+                        || (motherIdEq && fatherIdEq)) {
+                    PersonVO personVO = personService.getPersonVOById(p.getPersonId());
+                    children.add(personVO);
+                }
+            }
+        }
+        return children;
     }
 }
