@@ -19,44 +19,49 @@
   * [Family Tree](#family-tree)
     + [URL](#url-5)
     + [Parameters](#parameters-5)
-- [Person](#person)
-  * [List persons](#list-persons)
+  * [Get whole family](#get-whole-family)
     + [URL](#url-6)
     + [Parameters](#parameters-6)
-  * [Add person](#add-person)
+- [Person](#person)
+  * [List persons](#list-persons)
     + [URL](#url-7)
     + [Parameters](#parameters-7)
-  * [Add spouse](#add-spouse)
+  * [Add person](#add-person)
     + [URL](#url-8)
     + [Parameters](#parameters-8)
-  * [Add father](#add-father)
+  * [Add spouse](#add-spouse)
     + [URL](#url-9)
     + [Parameters](#parameters-9)
-  * [Add mother](#add-mother)
+  * [Add father](#add-father)
     + [URL](#url-10)
     + [Parameters](#parameters-10)
-  * [Delete person](#delete-person)
+  * [Add mother](#add-mother)
     + [URL](#url-11)
     + [Parameters](#parameters-11)
-  * [Update person](#update-person)
+  * [Delete person](#delete-person)
     + [URL](#url-12)
     + [Parameters](#parameters-12)
-  * [Update individual’s father](#update-individual-s-father)
+  * [Update person](#update-person)
     + [URL](#url-13)
     + [Parameters](#parameters-13)
-  * [Update individual’s mother](#update-individual-s-mother)
+  * [Update individual’s father](#update-individual-s-father)
     + [URL](#url-14)
     + [Parameters](#parameters-14)
-  * [Update individual’s spouse](#update-individual-s-spouse)
+  * [Update individual’s mother](#update-individual-s-mother)
     + [URL](#url-15)
     + [Parameters](#parameters-15)
-  * [Search person by full name](#search-person-by-full-name)
+  * [Update individual’s spouse](#update-individual-s-spouse)
     + [URL](#url-16)
     + [Parameters](#parameters-16)
-  * [Search person by id](#search-person-by-id)
+  * [Search person by full name](#search-person-by-full-name)
     + [URL](#url-17)
     + [Parameters](#parameters-17)
-
+  * [Search person by id](#search-person-by-id)
+    + [URL](#url-18)
+    + [Parameters](#parameters-18)
+  * [Get all relevant people](#get-all-relevant-people)
+    + [URL](#url-19)
+    + [Parameters](#parameters-19)
 ## File
 ### Create database
 Create a new sqlite database file.
@@ -229,7 +234,117 @@ http://3.9.172.108:8090/api/family/tree/7
     }
 }
 ```
-
+### Get whole family
+Get the whole family by person's id.
+#### URL
+GET /api/family/{person_id}
+#### Parameters
+|  Name   | Type |  In  | Required | Description |
+|  ----   | ---- | ---- |   ----   |    ----     |
+| person_id | Integer |path |required| The id of the person |
+```shell
+http://3.9.172.108:8090/api/family/135
+```
+* Example Response
+```json
+{
+  "success": true,
+  "code": 200,
+  "msg": "Success",
+  "data": {
+    "father": {
+      "personId": 137,
+      "personVO": {
+        "personId": 137,
+        "firstName": "test",
+        "lastName": "father",
+        "sex": "male",
+        "birth": 1890,
+        "death": 1970,
+        "address": "Newcastle",
+        "spouse": null
+      },
+      "father": null,
+      "mother": null
+    },
+    "mother": {
+      "personId": 138,
+      "personVO": {
+        "personId": 138,
+        "firstName": "test",
+        "lastName": "mother",
+        "sex": "female",
+        "birth": 1890,
+        "death": 1970,
+        "address": "Newcastle",
+        "spouse": null
+      },
+      "father": null,
+      "mother": null
+    },
+    "person": {
+      "personId": 135,
+      "firstName": "test",
+      "lastName": "person",
+      "sex": "male",
+      "birth": 1920,
+      "death": 2010,
+      "address": "Newcastle",
+      "spouse": {
+        "personId": 136,
+        "firstName": "test2",
+        "lastName": "spouse",
+        "sex": "female",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      }
+    },
+    "children": [
+      {
+        "personId": 135,
+        "firstName": "test",
+        "lastName": "person",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": {
+          "personId": 136,
+          "firstName": "test2",
+          "lastName": "spouse",
+          "sex": "female",
+          "birth": 1920,
+          "death": 2010,
+          "address": "Newcastle",
+          "spouse": null
+        }
+      },
+      {
+        "personId": 139,
+        "firstName": "test",
+        "lastName": "brother1",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      },
+      {
+        "personId": 140,
+        "firstName": "test",
+        "lastName": "brother2",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      }
+    ]
+  }
+}
+```
 ## Person
 ### List persons
 Return all persons in the database
@@ -566,5 +681,127 @@ http://3.9.172.108:8090/api/person/search/7
       "address": " ",
       "spouse": null
     }
+}
+```
+### Get all relevant people
+Get all relevant persons by id.
+#### URL
+GET /api/person/relationship/{person_id}
+#### Parameters
+|  Name   | Type |  In  | Required | Description |
+|  ----   | ---- | ---- |   ----   |    ----     |
+| person_id | Integer |path |required| The id of the person |
+* Example Request
+```shell
+http://3.9.172.108:8090/api/person/relationship/135
+```
+* Example Response
+```json
+{
+  "success": true,
+  "code": 200,
+  "msg": "Success",
+  "data": {
+    "person": {
+      "personId": 135,
+      "firstName": "test",
+      "lastName": "person",
+      "sex": "male",
+      "birth": 1920,
+      "death": 2010,
+      "address": "Newcastle",
+      "spouse": {
+        "personId": 136,
+        "firstName": "test2",
+        "lastName": "spouse",
+        "sex": "female",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      }
+    },
+    "father": {
+      "personId": 137,
+      "firstName": "test",
+      "lastName": "father",
+      "sex": "male",
+      "birth": 1890,
+      "death": 1970,
+      "address": "Newcastle",
+      "spouse": null
+    },
+    "mother": {
+      "personId": 138,
+      "firstName": "test",
+      "lastName": "mother",
+      "sex": "female",
+      "birth": 1890,
+      "death": 1970,
+      "address": "Newcastle",
+      "spouse": null
+    },
+    "spouse": {
+      "personId": 136,
+      "firstName": "test2",
+      "lastName": "spouse",
+      "sex": "female",
+      "birth": 1920,
+      "death": 2010,
+      "address": "Newcastle",
+      "spouse": {
+        "personId": 135,
+        "firstName": "test",
+        "lastName": "person",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      }
+    },
+    "brothersAndSisters": [
+      {
+        "personId": 135,
+        "firstName": "test",
+        "lastName": "person",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": {
+          "personId": 136,
+          "firstName": "test2",
+          "lastName": "spouse",
+          "sex": "female",
+          "birth": 1920,
+          "death": 2010,
+          "address": "Newcastle",
+          "spouse": null
+        }
+      },
+      {
+        "personId": 139,
+        "firstName": "test",
+        "lastName": "brother1",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      },
+      {
+        "personId": 140,
+        "firstName": "test",
+        "lastName": "brother2",
+        "sex": "male",
+        "birth": 1920,
+        "death": 2010,
+        "address": "Newcastle",
+        "spouse": null
+      }
+    ],
+    "children": []
+  }
 }
 ```
