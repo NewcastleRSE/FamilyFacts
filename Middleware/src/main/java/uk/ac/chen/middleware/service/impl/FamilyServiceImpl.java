@@ -141,8 +141,10 @@ public class FamilyServiceImpl implements FamilyService {
                 }
                 boolean motherIdEqNull = f.getMotherId() == null && motherId == null;
                 boolean fatherIdEqNull = f.getFatherId() == null && fatherId == null;
-                boolean motherIdEq = f.getMotherId().equals(motherId);
-                boolean fatherIdEq = f.getFatherId().equals(fatherId);
+                boolean motherIdEq = f.getMotherId() != null && f.getMotherId() > 0
+                        && f.getMotherId().equals(motherId);
+                boolean fatherIdEq = f.getFatherId() != null && f.getFatherId() > 0
+                        && f.getFatherId().equals(fatherId);
                 if ((motherIdEqNull && fatherIdEq) || (fatherIdEqNull && motherIdEq)
                         || (motherIdEq && fatherIdEq)) {
                     PersonVO personVO = personService.getPersonVOById(p.getPersonId());

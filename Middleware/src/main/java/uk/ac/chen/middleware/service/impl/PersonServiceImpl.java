@@ -246,7 +246,7 @@ public class PersonServiceImpl implements PersonService {
         }
 
         FamilyEntity familyEntity;
-        if (personEntity.getParentId() == null) {
+        if (personEntity.getParentId() == null || personEntity.getParentId() <= 0) {
             familyEntity = new FamilyEntity();
             familyEntity.setFatherId(fatherId);
             familyMapper.insert(familyEntity);
@@ -269,7 +269,7 @@ public class PersonServiceImpl implements PersonService {
         }
 
         FamilyEntity familyEntity;
-        if (personEntity.getParentId() == null) {
+        if (personEntity.getParentId() == null || personEntity.getParentId() <= 0) {
             familyEntity = new FamilyEntity();
             familyEntity.setMotherId(motherId);
             familyMapper.insert(familyEntity);
@@ -303,7 +303,8 @@ public class PersonServiceImpl implements PersonService {
     public RelationshipVO getAllRelatedPersons(Integer personId) {
         RelationshipVO relationship = new RelationshipVO();
         PersonEntity personEntity = getPersonById(personId);
-        if (personEntity == null || personEntity.getPersonId() == null) {
+        if (personEntity == null || personEntity.getPersonId() == null
+                || personEntity.getParentId() <= 0) {
             return null;
         }
         //himself/herself
@@ -326,9 +327,11 @@ public class PersonServiceImpl implements PersonService {
         }
 
         //get spouse
-        if (personEntity.getSpouseId() != null) {
+        if (personEntity.getSpouseId() != null ) {
             PersonVO spouse = getPersonVOById(personEntity.getSpouseId());
-            relationship.setSpouse(spouse);
+            if (spouse != null) {
+                relationship.setSpouse(spouse);
+            }
         }
 
         // get brothers and sisters
