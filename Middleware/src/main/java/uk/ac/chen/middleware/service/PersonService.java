@@ -139,4 +139,28 @@ public interface PersonService {
      * @return
      */
     RelationshipVO getAllRelatedPersons(Integer personId);
+
+    /**
+     * Dissolution of paternity
+     * @param personId
+     * @param fatherId
+     * @return person id
+     */
+    int unlinkOfFather(Integer personId, Integer fatherId);
+
+    /**
+     * Dissolution of paternity
+     * @param personId
+     * @param motherId
+     * @return person id
+     */
+    int unlinkOfMother(Integer personId, Integer motherId);
+
+    /**
+     * Dissolution of marriage
+     * @param personId
+     * @param spouseId
+     * @return person id
+     */
+    int unlinkOfSpouse(Integer personId, Integer spouseId);
 }

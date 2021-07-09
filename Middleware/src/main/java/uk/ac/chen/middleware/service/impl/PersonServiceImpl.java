@@ -1,6 +1,7 @@
 package uk.ac.chen.middleware.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.stereotype.Service;
 import uk.ac.chen.middleware.entity.*;
 import uk.ac.chen.middleware.entity.vo.PersonVO;
@@ -303,8 +304,7 @@ public class PersonServiceImpl implements PersonService {
     public RelationshipVO getAllRelatedPersons(Integer personId) {
         RelationshipVO relationship = new RelationshipVO();
         PersonEntity personEntity = getPersonById(personId);
-        if (personEntity == null || personEntity.getPersonId() == null
-                || personEntity.getParentId() <= 0) {
+        if (personEntity == null || personEntity.getPersonId() == null) {
             return null;
         }
         //himself/herself
@@ -312,7 +312,7 @@ public class PersonServiceImpl implements PersonService {
         relationship.setPerson(person);
 
         //get parent
-        if (personEntity.getParentId() != null) {
+        if (personEntity.getParentId() != null && personEntity.getParentId() > 0) {
             FamilyEntity familyEntity = familyService.getFamilyByFamilyId(personEntity.getParentId());
             if (familyEntity != null) {
                 if (familyEntity.getFatherId() != null) {
@@ -356,5 +356,79 @@ public class PersonServiceImpl implements PersonService {
         }
         relationship.setChildren(children);
         return relationship;
+    }
+
+    @Override
+    public int unlinkOfFather(Integer personId, Integer fatherId) {
+        PersonEntity person = getPersonById(personId);
+        if (person == null || !person.getPersonId().equals(personId)) {
+            return -1;
+        }
+        if (person.getParentId() == null || person.getParentId() <= 0) {
+            return personId;
+        }
+        FamilyEntity f = familyService.getFamilyByFamilyId(person.getParentId());
+        if (f != null && f.getFatherId() != null && f.getFatherId().equals(fatherId)) {
+            UpdateWrapper<FamilyEntity> uw = new UpdateWrapper<>();
+            uw.set("FatherID", null);
+            uw.eq("FamilyID", f.getFamilyId());
+            familyMapper.update(f, uw);
+            if (f.getMotherId() == null) {
+                familyMapper.deleteById(f.getFamilyId());
+                UpdateWrapper<PersonEntity> uwP = new UpdateWrapper<>();
+                uwP.set("ParentID", null);
+                uwP.eq("PersonID", personId);
+                personMapper.update(person, uwP);
+            }
+        }
+        return personId;
+    }
+
+    @Override
+    public int unlinkOfMother(Integer personId, Integer motherId) {
+        PersonEntity person = getPersonById(personId);
+        if (person == null || !person.getPersonId().equals(personId)) {
+            return -1;
+        }
+        if (person.getParentId() == null || person.getParentId() <= 0) {
+            return personId;
+        }
+        FamilyEntity f = familyService.getFamilyByFamilyId(person.getParentId());
+        if (f != null && f.getMotherId() != null && f.getMotherId().equals(motherId)) {
+            UpdateWrapper<FamilyEntity> uw = new UpdateWrapper<>();
+            uw.set("MotherID", null);
+            uw.eq("FamilyID", f.getFamilyId());
+            familyMapper.update(f, uw);
+            if (f.getFatherId() == null) {
+                familyMapper.deleteById(f.getFamilyId());
+                UpdateWrapper<PersonEntity> uwP = new UpdateWrapper<>();
+                uwP.set("ParentID", null);
+                uwP.eq("PersonID", personId);
+                personMapper.update(person, uwP);
+            }
+        }
+        return personId;
+    }
+
+    @Override
+    public int unlinkOfSpouse(Integer personId, Integer spouseId) {
+        PersonEntity person = getPersonById(personId);
+        if (person == null || !person.getPersonId().equals(personId)) {
+            return -1;
+        }
+        if (person.getSpouseId() != null && person.getSpouseId().equals(spouseId)) {
+            UpdateWrapper<PersonEntity> uw = new UpdateWrapper<>();
+            uw.set("SpouseID", null);
+            uw.eq("PersonID", personId);
+            personMapper.update(person, uw);
+            PersonEntity spouse = getPersonById(spouseId);
+            if (spouse != null) {
+                UpdateWrapper<PersonEntity> uwSpouse = new UpdateWrapper<>();
+                uwSpouse.set("SpouseID", null);
+                uwSpouse.eq("PersonID", spouse.getPersonId());
+                personMapper.update(person, uwSpouse);
+            }
+        }
+        return personId;
     }
 }

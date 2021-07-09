@@ -123,6 +123,9 @@ public class FamilyServiceImpl implements FamilyService {
             return null;
         }
         FamilyEntity familyEntity = getFamilyByFamilyId(personEntity.getParentId());
+        if (familyEntity == null) {
+            return null;
+        }
         Integer fatherId = familyEntity.getFatherId();
         Integer motherId = familyEntity.getMotherId();
         if (motherId == null && fatherId == null) {

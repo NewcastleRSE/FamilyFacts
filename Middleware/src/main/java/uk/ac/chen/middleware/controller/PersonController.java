@@ -45,7 +45,7 @@ public class PersonController {
                                 @RequestParam("address") String address) {
         int sexCode = "male".equals(sex) ? 0 : 1;
         int id = personService.addSpouse(personId, firstName, lastName, sexCode, birth, death, address);
-        return id >= 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
     @PostMapping("create/father")
@@ -58,7 +58,7 @@ public class PersonController {
                                 @RequestParam("address") String address) {
         int sexCode = "male".equals(sex) ? 0 : 1;
         int id = personService.addFather(personId, firstName, lastName, sexCode, birth, death, address);
-        return id >= 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
     @PostMapping("create/mother")
@@ -71,7 +71,7 @@ public class PersonController {
                                 @RequestParam("address") String address) {
         int sexCode = "male".equals(sex) ? 0 : 1;
         int id = personService.addMother(personId, firstName, lastName, sexCode, birth, death, address);
-        return id >= 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
     @PostMapping("update/{person_id}")
@@ -85,21 +85,21 @@ public class PersonController {
     public JsonResult updateFatherOfPerson(@RequestParam("person_id") Integer personId,
                                            @RequestParam("father_id") Integer fatherId) {
         int id = personService.updateFatherOfPerson(personId, fatherId);
-        return id >= 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
     @PostMapping("update/mother")
     public JsonResult updateMotherOfPerson(@RequestParam("person_id") Integer personId,
                                            @RequestParam("mother_id") Integer fatherId) {
         int id = personService.updateMotherOfPerson(personId, fatherId);
-        return id >= 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
     @PostMapping("update/spouse")
     public JsonResult updateSpouseOfPerson(@RequestParam("person_id") Integer personId,
                                            @RequestParam("spouse_id") Integer fatherId) {
         int id = personService.updateSpouseOfPerson(personId, fatherId);
-        return id >= 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
 
@@ -160,5 +160,26 @@ public class PersonController {
         } else {
             return Result.success(relationship);
         }
+    }
+
+    @PostMapping("unlink/father")
+    public JsonResult unlinkOfFather(@RequestParam("person_id") Integer personId,
+                                     @RequestParam("father_id") Integer fatherId) {
+        int id = personService.unlinkOfFather(personId, fatherId);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+    }
+
+    @PostMapping("unlink/mother")
+    public JsonResult unlinkOfMother(@RequestParam("person_id") Integer personId,
+                                     @RequestParam("mother_id") Integer motherId) {
+        int id = personService.unlinkOfMother(personId, motherId);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
+    }
+
+    @PostMapping("unlink/spouse")
+    public JsonResult unlinkOfSpouse(@RequestParam("person_id") Integer personId,
+                                     @RequestParam("spouse_id") Integer spouseId) {
+        int id = personService.unlinkOfSpouse(personId, spouseId);
+        return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 }

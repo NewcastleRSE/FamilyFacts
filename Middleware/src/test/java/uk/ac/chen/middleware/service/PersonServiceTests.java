@@ -48,7 +48,7 @@ public class PersonServiceTests {
         Integer personId = 140;
         Integer fatherId = 137;
         int id = personService.updateFatherOfPerson(personId, fatherId);
-        Assertions.assertTrue(id >= 0);
+        Assertions.assertTrue(id > 0);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class PersonServiceTests {
         Integer personId = 140;
         Integer motherId = 138;
         int id = personService.updateMotherOfPerson(personId, motherId);
-        Assertions.assertTrue(id >= 0);
+        Assertions.assertTrue(id > 0);
     }
 
     @Test
@@ -144,9 +144,33 @@ public class PersonServiceTests {
 
     @Test
     void testGetRelationship() {
-        Integer personId = 137;
+        Integer personId = 135;
         RelationshipVO relationship = personService.getAllRelatedPersons(personId);
         logger.info("RelationshipVo: {}", relationship);
+    }
+
+    @Test
+    void testUnlinkOfFather() {
+        Integer personId = 135;
+        Integer fatherId = 149;
+        int id = personService.unlinkOfFather(personId, fatherId);
+        Assertions.assertTrue(id > 0);
+    }
+
+    @Test
+    void testUnlinkOfMother() {
+        Integer personId = 135;
+        Integer motherId = 151;
+        int id = personService.unlinkOfMother(personId, motherId);
+        Assertions.assertTrue(id > 0);
+    }
+
+    @Test
+    void testUnlinkOfSpouse() {
+        Integer personId = 135;
+        Integer spouseId = 150;
+        int id = personService.unlinkOfSpouse(personId, spouseId);
+        Assertions.assertTrue(id > 0);
     }
 
 }
