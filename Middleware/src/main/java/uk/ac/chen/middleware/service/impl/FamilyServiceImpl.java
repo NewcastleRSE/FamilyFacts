@@ -135,7 +135,8 @@ public class FamilyServiceImpl implements FamilyService {
         List<PersonEntity> persons = personService.listPersons();
         if (persons != null && persons.size() > 0) {
             for (PersonEntity p : persons) {
-                if (p.getPersonId() == null || p.getParentId() == null) {
+                if (p.getPersonId() == null || p.getParentId() == null ||
+                        p.getPersonId().equals(personId)) {
                     continue;
                 }
                 FamilyEntity f = getFamilyByFamilyId(p.getParentId());
