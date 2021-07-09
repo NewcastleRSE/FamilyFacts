@@ -62,6 +62,16 @@
   * [Get all relevant people](#get-all-relevant-people)
     + [URL](#url-19)
     + [Parameters](#parameters-19)
+  * [Unlink of father](#unlink-of-father)
+    + [URL](#url-20)
+    + [Parameters](#parameters-20)
+  * [Unlink of mother](#unlink-of-mother)
+    + [URL](#url-21)
+    + [Parameters](#parameters-21)
+  * [Unlink of spouse](#unlink-of-spouse)
+    + [URL](#url-22)
+    + [Parameters](#parameters-22)
+
 ## File
 ### Create database
 Create a new sqlite database file.
@@ -564,7 +574,7 @@ POST /api/person/update/father
 | father_id | Integer |query|required|The father of the person|
 * Example Request
 ```shell
-http://3.9.172.108:8090/api/person/father?person_id=135&father_id=137
+http://3.9.172.108:8090/api/person/update/father?person_id=135&father_id=137
 ```
 * Example Response
 ```json
@@ -587,7 +597,7 @@ POST /api/person/update/father
 | mother_id | Integer |query|required|The mother of the person|
 * Example Request
 ```shell
-http://3.9.172.108:8090/api/person/mother?person_id=135&mother_id=138
+http://3.9.172.108:8090/api/person/update/mother?person_id=135&mother_id=138
 ```
 * Example Response
 ```json
@@ -610,7 +620,7 @@ POST /api/person/update/spouse
 | spouse_id | Integer |query|required|The spouse of the person|
 * Example Request
 ```shell
-http://3.9.172.108:8090/api/person/spouse?person_id=135&spouse_id=136
+http://3.9.172.108:8090/api/person/update/spouse?person_id=135&spouse_id=136
 ```
 * Example Response
 ```json
@@ -803,5 +813,73 @@ http://3.9.172.108:8090/api/person/relationship/135
     ],
     "children": []
   }
+}
+```
+### Unlink of father
+Unlink of father.
+#### URL
+POST /api/person/unlink/father
+#### Parameters
+|  Name   | Type |  In  | Required | Description |
+|  ----   | ---- | ---- |   ----   |    ----     |
+| person_id | Integer |query |required| The id of the person |
+| father_id | Integer |query|required|The father of the person|
+* Example Request
+```shell
+http://3.9.172.108:8090/api/person/unlink/father?person_id=135&father_id=137
+```
+* Example Response
+```json
+{
+  "success": true,
+  "code": 200,
+  "msg": "Success",
+  "data": null
+}
+```
+
+### Unlink of mother
+Unlink of mother.
+#### URL
+POST /api/person/unlink/father
+#### Parameters
+|  Name   | Type |  In  | Required | Description |
+|  ----   | ---- | ---- |   ----   |    ----     |
+| person_id | Integer |query |required| The id of the person |
+| mother_id | Integer |query|required|The mother of the person|
+* Example Request
+```shell
+http://3.9.172.108:8090/api/person/unlink/mother?person_id=135&mother_id=138
+```
+* Example Response
+```json
+{
+  "success": true,
+  "code": 200,
+  "msg": "Success",
+  "data": null
+}
+```
+
+### Unlink of spouse
+Unlink of spouse.
+#### URL
+POST /api/person/unlink/spouse
+#### Parameters
+|  Name   | Type |  In  | Required | Description |
+|  ----   | ---- | ---- |   ----   |    ----     |
+| person_id | Integer |query |required| The id of the person |
+| spouse_id | Integer |query|required|The spouse of the person|
+* Example Request
+```shell
+http://3.9.172.108:8090/api/person/unlink/spouse?person_id=135&spouse_id=136
+```
+* Example Response
+```json
+{
+  "success": true,
+  "code": 200,
+  "msg": "Success",
+  "data": null
 }
 ```
