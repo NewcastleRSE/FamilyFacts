@@ -172,7 +172,7 @@ POST /file/gedcom/import
 | file_path | String | query|required|The path of the gedcom file|
 * Example Request
 ```shell
-http://localhost:8090/api/file/gedcom/import?gedcom_path=%2Fhome%2Fec2-user%2FFamilyFacts%2Fsqlite%2Fsample.ged
+http://3.9.172.108:8090/api/file/gedcom/import?gedcom_path=%2Fhome%2Fec2-user%2FFamilyFacts%2Fsqlite%2Fsample.ged
 ```
 * Example Response
 ```json
