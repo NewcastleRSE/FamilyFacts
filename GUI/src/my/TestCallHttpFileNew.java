@@ -6,10 +6,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class TestCallHttp {
+import javax.swing.JOptionPane;
 
-	static void httpURLPOSTCase() {
-		String POST_URL = "http://3.9.172.108:8090/api/file/database/open";
+public class TestCallHttpFileNew {
+	static String ss;
+
+	static void httpURLPOSTCase(String database_path) {
+		String POST_URL = "http://3.9.172.108:8090/api/file/database/create";
 		try {
 			URL url = new URL(POST_URL);
 
@@ -31,9 +34,18 @@ public class TestCallHttp {
 
 			DataOutputStream dataout = new DataOutputStream(connection.getOutputStream());
 
-			String parm = "database_path=/home/ec2-user/FamilyFacts/sqlite/init.db";
+			String parm = "database_path=/home/ec2-user/FamilyFacts/sqlite/test.db";
 
-			dataout.writeBytes(parm);
+			StringBuilder sb1 = new StringBuilder();
+
+			sb1.append("database_path=");
+			String databasepath = database_path;
+			sb1.append(databasepath);
+
+			String s1 = sb1.toString();
+			System.out.println(s1);
+
+			dataout.writeBytes(s1);
 
 			dataout.flush();
 			dataout.close();
@@ -48,6 +60,22 @@ public class TestCallHttp {
 			bf.close();
 			connection.disconnect();
 			System.out.println(sb.toString());
+
+			String success = sb.toString();
+			System.out.println(success);
+			if (success.length() != 0) {
+				int i1 = success.indexOf(':');
+				int i2 = success.indexOf(',');
+				ss = success.substring(i1 + 1, i2);// success后数据
+				System.out.println("--success后数据(字符串)---");
+				System.out.println(ss);
+				if (ss.equals("true")) {
+
+					JOptionPane.showMessageDialog(null, "Added successfully！", "prompt", JOptionPane.PLAIN_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(null, "Add Failed！！！", "prompt", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -13,14 +13,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
-import af.swing.AfPanel;
-import af.swing.layout.AfColumnLayout;
-import af.swing.layout.AfRowLayout;
+import smx.swing.AfPanel;
+import smx.swing.layout.AfColumnLayout;
+import smx.swing.layout.AfRowLayout;
 
-//File-Delete
 public class FileDelete extends JDialog {
 
-	JTextField textField = new JTextField(20);
+	JTextField filedeleteField = new JTextField(20);
 	JButton button = new JButton("OK");
 	private boolean retValue = false;
 
@@ -43,8 +42,8 @@ public class FileDelete extends JDialog {
 			AfPanel row = new AfPanel();
 			main.add(row, "24px");
 			row.setLayout(new AfRowLayout(10));
-			row.add(new JLabel("File Name"));
-			row.add(textField, "1w");
+			row.add(new JLabel("Database Path:"));
+			row.add(filedeleteField, "1w");
 
 		}
 		AfPanel bottom = new AfPanel();
@@ -57,10 +56,16 @@ public class FileDelete extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				String condition = filedeleteField.getText().trim();
+				testhttpfiledelete(condition);
 			}
 		});
 
+	}
+
+	public void testhttpfiledelete(String database_path) {
+
+		TestCallHttpFileDelete.httpURLPOSTCase(database_path);
 	}
 
 	public boolean exec() {

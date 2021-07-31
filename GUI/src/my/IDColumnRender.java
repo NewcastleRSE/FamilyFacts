@@ -16,7 +16,7 @@ public class IDColumnRender extends JCheckBox implements TableCellRenderer
 		if(value != null)
 			this.setText(value.toString());
 		
-		// 背景设置
+
 		this.setOpaque(true);			
 	    if (isSelected) {
 	    	this.setBackground(table.getSelectionBackground());

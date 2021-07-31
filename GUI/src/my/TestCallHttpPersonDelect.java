@@ -7,14 +7,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.swing.JOptionPane;
+
 public class TestCallHttpPersonDelect {
+	String ss;
 
 	public void httpURLGETCase(String filter) {
-		// TODO Auto-generated method stub
-		// filter = "135";
+
 		String methodUrl = "http://3.9.172.108:8090/api/person/delete/" + filter;
 		HttpURLConnection connection = null;
-		// BufferedReader reader = null;
 
 		String line = null;
 		System.out.println("-----------------------------------------------------------");
@@ -43,6 +44,7 @@ public class TestCallHttpPersonDelect {
 			DataOutputStream dataout = new DataOutputStream(connection.getOutputStream());
 
 			dataout.flush();
+
 			dataout.close();
 
 			BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
@@ -56,11 +58,28 @@ public class TestCallHttpPersonDelect {
 			connection.disconnect();
 			System.out.println(sb.toString());
 
+			String success = sb.toString();
+			System.out.println(success);
+			if (success.length() != 0) {
+				int i1 = success.indexOf(':');
+				int i2 = success.indexOf(',');
+				ss = success.substring(i1 + 1, i2);
+				System.out.println("--success后数据(字符串)---");
+				System.out.println(ss);
+				if (ss.equals("true")) {
+
+					JOptionPane.showMessageDialog(null, "Delete successfully！", "prompt", JOptionPane.PLAIN_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(null, "Delete Failed！！！", "prompt", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 
 			connection.disconnect();
+
 		}
 	}
 

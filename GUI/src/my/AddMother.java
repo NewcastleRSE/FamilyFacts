@@ -22,19 +22,17 @@ import javax.swing.table.DefaultTableModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import af.swing.AfPanel;
-import af.swing.layout.AfAnyWhere;
-import af.swing.layout.AfColumnLayout;
-import af.swing.layout.AfMargin;
-import af.swing.layout.AfRowLayout;
-import af.swing.layout.AfXLayout;
+import smx.swing.AfPanel;
+import smx.swing.layout.AfAnyWhere;
+import smx.swing.layout.AfColumnLayout;
+import smx.swing.layout.AfMargin;
+import smx.swing.layout.AfRowLayout;
+import smx.swing.layout.AfXLayout;
 
 public class AddMother extends JDialog {
 
-	List<Person> dataList = new ArrayList<>();
 
-	DefaultTableModel tableModel = new DefaultTableModel();
-
+	static String personid = null;
 	JButton addnewpersonButton = new JButton("Add New Person");
 	JButton selectexistingpersonButton = new JButton("Select Existing Person");
 	JButton cancelButton = new JButton("Cancel");
@@ -56,24 +54,29 @@ public class AddMother extends JDialog {
 		mainPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		mainPanel.padding(10);
 
-		mainPanel.add(new JLabel("Add a mother to XXXXX"), "200px");
+		mainPanel.add(new JLabel("Add a mother to " + personid), "200px");
 
 		AfPanel buttonPanel = new AfPanel();
 		root.add(buttonPanel, "30px");
 		buttonPanel.setLayout(new AfRowLayout(10));
+
 		buttonPanel.add(addnewpersonButton, "auto");
 		addnewpersonButton.addActionListener((e) -> {
-			onAddIndividual();//
 
+			// Open the window to add a new person
+			// 打开添加一个新人的窗口
+			onAddIndividual();
 		});
 
-		buttonPanel.add(selectexistingpersonButton, "auto");
 		buttonPanel.add(selectexistingpersonButton, "auto");
 		selectexistingpersonButton.addActionListener((e) -> {
-			onSelectExist();//
+
+			// Open the window of select existing person
+			// 打开select existing person的窗口
+			onSelectExist();
 
 		});
-		buttonPanel.add(cancelButton, "auto");
+		buttonPanel.add(cancelButton, "auto"); // 按钮靠右显示
 
 	}
 
@@ -91,67 +94,33 @@ public class AddMother extends JDialog {
 		return retValue;
 	}
 
-	private void addTableRow(Person item) {
+	public void onAddIndividual() {
+		AddIndividual aii = new AddIndividual(this);
+		if (aii.exec()) {
+			Person person = aii.getValue();
+			String firstname = person.firstname;
+			String lastname = person.lastname;
+			boolean sex1 = person.sex;
+			String sex = String.valueOf(sex1);
+			String birth = person.birthdate;
+			String death = person.deathdate;
+			String address = person.homeaddress;
+			aii.testhttpaddmother(personid, firstname, lastname, sex, birth, death, address);
 
-		Vector<Object> rowData = new Vector<>();
-		rowData.add(item.personid);
-		rowData.add(item.firstname);
-		rowData.add(item.lastname);
-		// rowData.add(item.nickname);
-		rowData.add(item.sex);
-		rowData.add(item.birthdate);
-		rowData.add(item.deathdate);
-		rowData.add(item.homeaddress);
-
-		tableModel.addRow(rowData);
-	}
-
-	private void addToDataList(Person s) {
-		dataList.add(s);
-	}
-
-	private void saveData() {
-
-		JSONArray array = new JSONArray();
-		for (int i = 0; i < dataList.size(); i++) {
-			Person s = dataList.get(i);
-			JSONObject j1 = new JSONObject();
-			j1.put("personid", s.personid);
-			j1.put("firstname", s.firstname);
-			j1.put("lastname", s.lastname);
-
-			j1.put("sex", s.sex);
-			j1.put("birthdate", s.birthdate);
-			j1.put("deathdate", s.deathdate);
-			j1.put("homeaddress", s.homeaddress);
-
-			array.put(j1);
-		}
-
-		File file = new File("person.json");
-		try {
-
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			e.printStackTrace();
 		}
 	}
 
-	private void onAddIndividual() {
-		AddIndividual ai = new AddIndividual(this);
-		if (ai.exec()) {
-			Person person = ai.getValue();
+	public void testhttpaddmother(String personid, String firstname, String lastname, String sex, String birth,
+			String death, String address) {
 
-			addToDataList(person);
-			addTableRow(person);
-			saveData();
-		}
+		TestCallHttpAddMother.httpURLPOSTCase(personid, firstname, lastname, sex, birth, death, address);
 	}
 
 	private void onSelectExist() {
 		SelectExistPerson sep = new SelectExistPerson(this);
+		sep.testhttpselectexistmother(personid);
+		System.out.println("personid:" + personid);
 		if (sep.exec()) {
-
 		}
 
 	}

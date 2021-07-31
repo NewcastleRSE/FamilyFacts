@@ -7,22 +7,33 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import net.sf.json.JSONArray;
-import smx.common.json.AfJSON;
+import net.sf.json.JSONObject;
 
-public class TestCallHttpList {
+public class TestCallHttpFamilytree {
 
-	public JSONArray httpURLGETCase(String apiUrl) {
-		String methodUrl = apiUrl;
+//  public static void main(String[] args) {
+//	
+//	  httpURLGETCase("135");
+//}
+
+	public static JSONObject httpURLGETCase(String filter) {
+
+		String methodUrl = "http://3.9.172.108:8090/api/family/tree/" + filter;
 		HttpURLConnection connection = null;
 		BufferedReader reader = null;
 		String line = null;
-		JSONArray array = null;
+		JSONObject a = null;
+//		JSONObject aperson = null;
+//		JSONObject afatherpersonvo = null;
+//		JSONObject afather = null;
+//		JSONObject amotherpersonvo = null;
+//		JSONObject amother = null;
+//		String personname = null;
 		try {
 			URL url = new URL(methodUrl);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.connect();
-
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 				StringBuilder result = new StringBuilder();
@@ -41,13 +52,18 @@ public class TestCallHttpList {
 				int i3 = s.indexOf(':', i2 + 1);
 				int i4 = s.indexOf(':', i3 + 1);
 				String ss = s.substring(i4 + 1, s.length() - 2);
+				System.out.println("--data后数据(字符串)---");
 				System.out.println(ss);
-				if (ss.length() != 0) {
-					AfJSON afJson = new AfJSON();
-					array = afJson.jsonToArray(ss);
+
+				if (s.length() != 0) {
+					a = JSONObject.fromObject(ss);
+					System.out.println("-----a:将上方字符串转JSONObject(a中包括personVO(选中的person)，father，mother)------");
+					System.out.println(a);
+					// System.out.println("--+++++++++++------");
 				}
+
 			}
-			return array;
+			return a;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
