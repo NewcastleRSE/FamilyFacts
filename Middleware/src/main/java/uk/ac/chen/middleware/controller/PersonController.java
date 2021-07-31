@@ -74,9 +74,19 @@ public class PersonController {
         return id > 0 ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
 
-    @PostMapping("update/{person_id}")
-    public JsonResult updatePerson(@PathVariable("person_id") Integer personId,
-                                   @RequestBody PersonVO person) {
+    @PostMapping("update")
+    public JsonResult updatePerson(@RequestParam("person_id") Integer personId,
+                                   @RequestParam("first_name") String firstName,
+                                   @RequestParam("last_name") String lastName,
+                                   @RequestParam("sex") String sex,
+                                   @RequestParam("birth") String birth,
+                                   @RequestParam("death") String death,
+                                   @RequestParam("address") String address) {
+        Integer birthDay = ("".equals(birth) || "null".equals(birth) || birth == null) ? 0
+                : Integer.parseInt(birth);
+        Integer deathDay = ("".equals(death) || "null".equals(death) || death == null) ? 0
+                : Integer.parseInt(death);
+        PersonVO person = new PersonVO(personId, firstName, lastName, sex, birthDay, deathDay, address);
         int id = personService.updatePerson(person);
         return id == personId ? Result.success() : Result.fail(ResultCode.PERSON_NOT_FOUND);
     }
@@ -105,7 +115,7 @@ public class PersonController {
 
     @GetMapping("search")
     public JsonResult<List<PersonVO>> getPersonByFullName(@RequestParam("first_name") String firstName,
-                                                    @RequestParam("last_name") String lastName) {
+                                                          @RequestParam("last_name") String lastName) {
         List<PersonEntity> persons = personService.getPersonByFullName(firstName, lastName);
         List<PersonVO> personVos = new ArrayList<>();
         for (PersonEntity person : persons) {

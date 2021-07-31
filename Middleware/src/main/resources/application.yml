@@ -11,8 +11,8 @@ spring:
 
 # database configuration
 # middleware.sqlite.url: jdbc:sqlite:src/main/resources/sqlite/init.db
-# middleware.sqlite.url: jdbc:sqlite:/home/ec2-user/FamilyFacts/sqlite/init.db
-middleware.sqlite.url: jdbc:sqlite:/Users/chen/Desktop/Newcastle/Dissertation/database/server/init.db
+middleware.sqlite.url: jdbc:sqlite:/home/ec2-user/FamilyFacts/sqlite/init.db
+# middleware.sqlite.url: jdbc:sqlite:/Users/chen/Desktop/Newcastle/Dissertation/database/server/init.db
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true

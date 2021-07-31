@@ -68,7 +68,8 @@ public class PersonServiceTests {
         Integer birthYear = 1920;
         Integer deathYear = 2010;
         String address = "Newcastle";
-        personService.addSpouse(personId, firstName, lastName, sex, birthYear, deathYear, address);
+        int id = personService.addSpouse(personId, firstName, lastName, sex, birthYear, deathYear, address);
+        Assertions.assertTrue(id > 0);
     }
 
     @Test
@@ -80,7 +81,8 @@ public class PersonServiceTests {
         Integer birthYear = 1890;
         Integer deathYear = 1970;
         String address = "Newcastle";
-        personService.addMother(personId, firstName, lastName, sex, birthYear, deathYear, address);
+        int id = personService.addMother(personId, firstName, lastName, sex, birthYear, deathYear, address);
+        Assertions.assertTrue(id > 0);
     }
 
     @Test
@@ -92,7 +94,8 @@ public class PersonServiceTests {
         Integer birthYear = 1890;
         Integer deathYear = 1970;
         String address = "Newcastle";
-        personService.addFather(personId, firstName, lastName, sex, birthYear, deathYear, address);
+        int id = personService.addFather(personId, firstName, lastName, sex, birthYear, deathYear, address);
+        Assertions.assertTrue(id > 0);
     }
 
     @Test
@@ -121,6 +124,7 @@ public class PersonServiceTests {
         int personId = 136;
         PersonVO personVO = personService.getPersonVOById(personId);
         logger.info("personVo: {}", personVO);
+        Assertions.assertEquals(personId, personVO.getPersonId());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package uk.ac.chen.middleware.service;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class FamilyServiceTests {
         Integer personId = 135;
         FamilyVO familyVO = familyService.getFamilyTreeByPersonId(personId);
         logger.info("Family Tree: {}", familyVO);
+        Assertions.assertEquals(personId, familyVO.getPersonId());
     }
 
     @Test
@@ -32,5 +34,6 @@ public class FamilyServiceTests {
         Integer personId = 135;
         FamilyDto familyDto = familyService.getWholeFamilyByPersonId(personId);
         logger.info("Family: {}", familyDto);
+        Assertions.assertEquals(personId, familyDto.getPerson().getPersonId());
     }
 }

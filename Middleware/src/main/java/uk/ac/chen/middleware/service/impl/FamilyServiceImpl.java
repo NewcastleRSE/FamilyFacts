@@ -62,8 +62,8 @@ public class FamilyServiceImpl implements FamilyService {
 
     private FamilyVO getFamilyNode(Integer personId) {
         PersonVO personVO = personService.getPersonVOById(personId);
-        if (personVO.getPersonId() == null) {
-            return new FamilyVO();
+        if (personVO == null || personVO.getPersonId() == null) {
+            return null;
         }
         FamilyVO node = new FamilyVO();
         node.setPersonId(personId);
@@ -109,7 +109,26 @@ public class FamilyServiceImpl implements FamilyService {
             }
 
             // bothers and sisters
-            List<PersonVO> children = getBrothersAndSisters(personId);
+            //List<PersonVO> children = getBrothersAndSisters(personId);
+            //familyDto.setChildren(children);
+        }
+        // get children
+        List<PersonVO> children = new ArrayList<>();
+        List<PersonEntity> personEntities = personMapper.selectList(null);
+        for (PersonEntity p : personEntities) {
+            if (p.getParentId() == null) {
+                continue;
+            }
+            FamilyEntity f = getFamilyByFamilyId(p.getParentId());
+            if (f == null) {
+                continue;
+            }
+            if ((f.getFatherId() != null && f.getFatherId().equals(personId)) ||
+                    (f.getMotherId() != null && f.getMotherId().equals(personId))) {
+                children.add(personService.getPersonVOById(p.getPersonId()));
+            }
+        }
+        if (children.size() > 0) {
             familyDto.setChildren(children);
         }
         return familyDto;
@@ -156,6 +175,6 @@ public class FamilyServiceImpl implements FamilyService {
                 }
             }
         }
-        return children;
+        return children.size() > 0 ? children : null;
     }
 }

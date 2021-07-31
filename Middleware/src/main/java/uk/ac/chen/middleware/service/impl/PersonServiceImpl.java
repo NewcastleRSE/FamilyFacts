@@ -198,7 +198,8 @@ public class PersonServiceImpl implements PersonService {
         }
         // person
         PersonEntity personEntity = getPersonById(personVO.getPersonId());
-        if (personEntity == null || personEntity.getPersonId() == null) {
+        if (personEntity == null || personEntity.getPersonId() == null
+                || !personEntity.getPersonId().equals(personVO.getPersonId())) {
             return -1;
         }
         String sex = personVO.getSex();
@@ -227,6 +228,8 @@ public class PersonServiceImpl implements PersonService {
             addressEntity = new AddressEntity();
             addressEntity.setName(personVO.getAddress());
             addressMapper.insert(addressEntity);
+            personEntity.setLiving(addressEntity.getAddressId());
+            personMapper.updateById(personEntity);
 
             AddressLinkEntity addressLinkEntity = new AddressLinkEntity();
             addressLinkEntity.setAddressId(addressEntity.getAddressId());
@@ -354,7 +357,9 @@ public class PersonServiceImpl implements PersonService {
                 children.add(getPersonVOById(p.getPersonId()));
             }
         }
-        relationship.setChildren(children);
+        if (children.size() > 0) {
+            relationship.setChildren(children);
+        }
         return relationship;
     }
 
